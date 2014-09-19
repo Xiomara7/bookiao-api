@@ -83,7 +83,7 @@ class Employee(BookiaoUser):
   Model for each Employee User
   """
   business = models.ForeignKey(Business)
-  services = models.ManyToManyField('Services')
+  services = models.ManyToManyField('Service')
 
 
 class EmployeeHours(models.Model):
@@ -101,7 +101,7 @@ class EmployeeHours(models.Model):
     unique_together = ('employee', 'weekday',)
 
 
-class Services(models.Model):
+class Service(models.Model):
   """
   Model to save the distinct services offered by employees
   """
@@ -109,13 +109,13 @@ class Services(models.Model):
   duration_in_minutes = models.CharField(max_length=3)
 
 
-class Appointments(models.Model):
+class Appointment(models.Model):
   """
   Model to save each appointment made through Bookiao
   """
   day = models.DateField()
   time = models.TimeField()
-  services = models.ManyToManyField(Services)
+  services = models.ManyToManyField(Service)
   employee = models.ForeignKey(Employee)
   client = models.ForeignKey('Client')
 

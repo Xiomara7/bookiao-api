@@ -1,13 +1,29 @@
-from django.contrib.auth.models import User, Group
+from core.models import Business, Employee, Client, Service, Appointment
 from rest_framework import serializers
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class BusinessSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
-    model = User
-    fields = ('url', 'username', 'email', 'groups')
+    model = Business
+    fields = ('url', 'email', 'name', 'phone_number', 'manager_name', 'location')
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
-    model = Group
-    fields = ('url', 'name')
+    model = Employee
+    fields = ('url', 'email', 'name', 'phone_number', 'business')
+
+class ClientSerializer(serializers.HyperlinkedModelSerializer):
+  class Meta:
+    model = Client
+    fields = ('url', 'email', 'name', 'phone_number')
+
+class ServiceSerializer(serializers.HyperlinkedModelSerializer):
+  class Meta:
+    model = Service
+    fields = ('url', 'name', 'duration_in_minutes')
+
+class AppointmentSerializer(serializers.HyperlinkedModelSerializer):
+  class Meta:
+    model = Appointment
+    fields = ('url', 'day', 'time', 'services', 'employee', 'client')
+
 

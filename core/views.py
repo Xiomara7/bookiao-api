@@ -1,17 +1,45 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from core.serializers import UserSerializer, GroupSerializer
 
-class UserViewSet(viewsets.ModelViewSet):
+from core.models import Business, Employee, Client, Service, Appointment
+from core.serializers import BusinessSerializer, EmployeeSerializer, ClientSerializer, ServiceSerializer, AppointmentSerializer
+
+
+class BusinessViewSet(viewsets.ModelViewSet):
   """
   API endpoint that allows users to be viewed or edited.
   """
-  queryset = User.objects.all()
-  serializer_class = UserSerializer
+  queryset = Business.objects.all()
+  serializer_class = BusinessSerializer
 
-class GroupViewSet(viewsets.ModelViewSet):
+
+class EmployeeViewSet(viewsets.ModelViewSet):
   """
   API endpoint that allows groups to be viewed or edited
   """
-  queryset = Group.objects.all()
-  serializer_class = GroupSerializer
+  queryset = Employee.objects.all()
+  serializer_class = EmployeeSerializer
+
+
+class ClientViewSet(viewsets.ModelViewSet):
+  """
+  API endpoint that allows users to be viewed or edited.
+  """
+  queryset = Client.objects.all()
+  serializer_class = ClientSerializer
+
+
+class ServiceViewSet(viewsets.ModelViewSet):
+  """
+  API endpoint that allows groups to be viewed or edited
+  """
+  queryset = Service.objects.all()
+  serializer_class = ServiceSerializer
+
+
+class AppointmentViewSet(viewsets.ModelViewSet):
+  """
+  API endpoint that allows groups to be viewed or edited
+  """
+  queryset = Appointment.objects.all()
+  serializer_class = AppointmentSerializer
+
