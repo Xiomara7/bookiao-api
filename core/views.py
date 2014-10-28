@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from core.models import Business, Employee, Client, Service, Appointment
 from core.serializers import BusinessSerializer, EmployeeSerializer, ClientSerializer, ServiceSerializer, AppointmentSerializer
@@ -34,6 +35,7 @@ class ServiceViewSet(viewsets.ModelViewSet):
   """
   queryset = Service.objects.all()
   serializer_class = ServiceSerializer
+  permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
@@ -42,4 +44,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
   """
   queryset = Appointment.objects.all()
   serializer_class = AppointmentSerializer
+  permission_classes = [IsAuthenticatedOrReadOnly]
+
 

@@ -64,6 +64,8 @@ class Business(BookiaoUser):
   # TODO: Maybe this should be saved in a different way?
   location = models.CharField(max_length=100)
 
+  objects = BookiaoUserManager()
+
 
 class BusinessHours(models.Model):
   """
@@ -84,6 +86,8 @@ class Employee(BookiaoUser):
   """
   business = models.ForeignKey(Business)
   services = models.ManyToManyField('Service')
+
+  objects = BookiaoUserManager()
 
 
 class EmployeeHours(models.Model):
@@ -124,4 +128,5 @@ class Client(BookiaoUser):
   """
   Model for each Client User
   """
+  objects = BookiaoUserManager()
 
