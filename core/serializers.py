@@ -10,38 +10,38 @@ class BookiaoUserSerializer(serializers.ModelSerializer):
     model = get_user_model()
 
 
-class BusinessSerializer(serializers.HyperlinkedModelSerializer):
+class BusinessSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Business
-    fields = ('url', 'email', 'name', 'phone_number', 'manager_name', 'location')
+    fields = ('id', 'email', 'name', 'phone_number', 'manager_name', 'location')
 
 
-class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
+class EmployeeSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Employee
-    fields = ('url', 'email', 'name', 'phone_number', 'business')
+    fields = ('id', 'email', 'name', 'phone_number', 'business')
 
 
-class ClientSerializer(serializers.HyperlinkedModelSerializer):
+class ClientSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Client
-    fields = ('url', 'email', 'name', 'phone_number')
+    fields = ('id', 'email', 'name', 'phone_number')
 
 
-class ServiceSerializer(serializers.HyperlinkedModelSerializer):
+class ServiceSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Service
-    fields = ('url', 'name', 'duration_in_minutes')
+    fields = ('id', 'name', 'duration_in_minutes')
 
 
-class AppointmentSerializer(serializers.HyperlinkedModelSerializer):
+class AppointmentSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Appointment
-    fields = ('url', 'day', 'time', 'services', 'employee', 'client')
+    fields = ('id', 'day', 'time', 'services', 'employee', 'client')
 
 
