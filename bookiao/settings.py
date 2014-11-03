@@ -39,10 +39,12 @@ INSTALLED_APPS = (
     'core',
     'rest_framework',
     'django_extensions',
+    'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -119,3 +121,6 @@ if os.getenv('PRODUCTION') == "True":
   STATICFILES_DIRS = (
       os.path.join(BASE_DIR, 'static'),
   )
+
+# Allow all origins to make requests
+CORS_ORIGIN_ALLOW_ALL = True
