@@ -56,15 +56,16 @@ class BookiaoUser(AbstractBaseUser):
     return self.name
 
 
-class Business(BookiaoUser):
+class Business(models.Model):
   """
   Model for each Business User
   """
+  email = models.EmailField(unique=True)
+  name = models.CharField(max_length=50)
+  phone_number = models.CharField(max_length=10)
   manager_name = models.CharField(max_length=50)
   # TODO: Maybe this should be saved in a different way?
   location = models.CharField(max_length=100)
-
-  objects = BookiaoUserManager()
 
 
 class BusinessHours(models.Model):
@@ -80,14 +81,15 @@ class BusinessHours(models.Model):
     unique_together = ('business', 'weekday',)
 
 
-class Employee(BookiaoUser):
+class Employee(models.Model):
   """
   Model for each Employee User
   """
+  email = models.EmailField(unique=True)
+  name = models.CharField(max_length=50)
+  phone_number = models.CharField(max_length=10)
   business = models.ForeignKey(Business)
   services = models.ManyToManyField('Service')
-
-  objects = BookiaoUserManager()
 
 
 class EmployeeHours(models.Model):
@@ -124,9 +126,11 @@ class Appointment(models.Model):
   client = models.ForeignKey('Client')
 
 
-class Client(BookiaoUser):
+class Client(models.Model):
   """
   Model for each Client User
   """
-  objects = BookiaoUserManager()
+  email = models.EmailField(unique=True)
+  name = models.CharField(max_length=50)
+  phone_number = models.CharField(max_length=10)
 
