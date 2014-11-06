@@ -40,6 +40,8 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 class AppointmentSerializer(serializers.ModelSerializer):
 
+  time = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'])
+
   class Meta:
     model = Appointment
     fields = ('id', 'day', 'time', 'services', 'employee', 'client')
