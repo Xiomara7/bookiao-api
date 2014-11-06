@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework import viewsets, status, serializers
+from rest_framework import viewsets, status, serializers, filters
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -32,6 +32,8 @@ class BusinessViewSet(viewsets.ModelViewSet):
   queryset = Business.objects.all()
   serializer_class = BusinessSerializer
   permission_classes = [IsAuthenticatedOrReadOnly]
+  filter_backends = (filters.DjangoFilterBackend,)
+  filter_fields = ('email',)
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
@@ -41,6 +43,8 @@ class EmployeeViewSet(viewsets.ModelViewSet):
   queryset = Employee.objects.all()
   serializer_class = EmployeeSerializer
   permission_classes = [IsAuthenticatedOrReadOnly]
+  filter_backends = (filters.DjangoFilterBackend,)
+  filter_fields = ('email', 'business',)
 
 
 class ClientViewSet(viewsets.ModelViewSet):
@@ -50,6 +54,8 @@ class ClientViewSet(viewsets.ModelViewSet):
   queryset = Client.objects.all()
   serializer_class = ClientSerializer
   permission_classes = [IsAuthenticatedOrReadOnly]
+  filter_backends = (filters.DjangoFilterBackend,)
+  filter_fields = ('email', 'phone_number',)
 
 class ServiceViewSet(viewsets.ModelViewSet):
   """
@@ -67,5 +73,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
   queryset = Appointment.objects.all()
   serializer_class = AppointmentSerializer
   permission_classes = [IsAuthenticatedOrReadOnly]
-
+  filter_backends = (filters.DjangoFilterBackend,)
+  filter_fields = ('employee', 'client',)
 
