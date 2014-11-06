@@ -73,6 +73,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
   queryset = Appointment.objects.all()
   serializer_class = AppointmentSerializer
   permission_classes = [IsAuthenticatedOrReadOnly]
-  filter_backends = (filters.DjangoFilterBackend,)
-  filter_fields = ('employee', 'client',)
-
+  filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter,)
+  filter_fields = ('employee', 'client', 'day',)
+  ordering_fields = ('time', 'day',)
