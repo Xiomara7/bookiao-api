@@ -25,6 +25,27 @@ def register(request):
   else:
       return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
+# View to get the user type of a user, given an email
+@api_view(['GET'])
+def user_type(request):
+  email = str(request.QUERY_PARAMS['email'])
+
+  userType = 'none'
+
+  business = Business.objects.filter(email=email)
+  if len(business) > 0:
+    userType = 'business'
+
+  employee = Employee.objects.filter(email=email)
+  if len(employee) > 0:
+    userType = 'employee'
+
+  client = Client.objects.filter(email=email)
+  if len(client) > 0:
+    userType = 'client'
+
+  return Response({'userType': userType}, status=status.HTTP_200_OK)
+
 class BusinessViewSet(viewsets.ModelViewSet):
   """
   API endpoint that allows businessess to be viewed or edited.
