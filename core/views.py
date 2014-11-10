@@ -26,25 +26,33 @@ def register(request):
       return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
 # View to get the user type of a user, given an email
+# Returns the user's respective object (Business, Employee or Client) with
+# the parameter userType holding the actual type of the user objects
 @api_view(['GET'])
 def user_type(request):
   email = str(request.QUERY_PARAMS['email'])
 
+  response = {}
+
   userType = 'none'
 
-  business = Business.objects.filter(email=email)
+  business = Business.objects.filter(email=email).values()
   if len(business) > 0:
     userType = 'business'
+    response.update(business[0])
 
-  employee = Employee.objects.filter(email=email)
+  employee = Employee.objects.filter(email=email).values()
   if len(employee) > 0:
     userType = 'employee'
+    response.update(employee[0])
 
-  client = Client.objects.filter(email=email)
+  client = Client.objects.filter(email=email).values()
   if len(client) > 0:
     userType = 'client'
+    response.update(client[0])
 
-  return Response({'userType': userType}, status=status.HTTP_200_OK)
+  response['userType'] = userType
+  return Response(response, status=status.HTTP_200_OK)
 
 class BusinessViewSet(viewsets.ModelViewSet):
   """
