@@ -58,7 +58,7 @@ class BookiaoUser(AbstractBaseUser):
   def get_short_name(self):
     return self.name
 
-
+@python_2_unicode_compatible
 class Business(models.Model):
   """
   Model for each Business User
@@ -71,7 +71,7 @@ class Business(models.Model):
   location = models.CharField(max_length=100)
 
   def __str__(self):
-    return self.name
+    return unicode(self.name)
 
 
 class BusinessHours(models.Model):
@@ -86,7 +86,7 @@ class BusinessHours(models.Model):
   class Meta:
     unique_together = ('business', 'weekday',)
 
-
+@python_2_unicode_compatible
 class Employee(models.Model):
   """
   Model for each Employee User
@@ -125,7 +125,7 @@ class Service(models.Model):
   def __str__(self):
     return "%s - %s minutos" % (unicode(self.name), self.duration_in_minutes)
 
-
+@python_2_unicode_compatible
 class Appointment(models.Model):
   """
   Model to save each appointment made through Bookiao
@@ -136,7 +136,7 @@ class Appointment(models.Model):
   employee = models.ForeignKey(Employee)
   client = models.ForeignKey('Client')
 
-
+@python_2_unicode_compatible
 class Client(models.Model):
   """
   Model for each Client User
