@@ -125,7 +125,6 @@ class Service(models.Model):
   def __str__(self):
     return "%s - %s minutos" % (unicode(self.name), self.duration_in_minutes)
 
-@python_2_unicode_compatible
 class Appointment(models.Model):
   """
   Model to save each appointment made through Bookiao
