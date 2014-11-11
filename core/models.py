@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 
 from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
@@ -67,6 +70,9 @@ class Business(models.Model):
   # TODO: Maybe this should be saved in a different way?
   location = models.CharField(max_length=100)
 
+  def __str__(self):
+    return self.name
+
 
 class BusinessHours(models.Model):
   """
@@ -91,6 +97,8 @@ class Employee(models.Model):
   business = models.ForeignKey(Business)
   services = models.ManyToManyField('Service')
 
+  def __str__(self):
+    return unicode(self.name)
 
 class EmployeeHours(models.Model):
   """
@@ -106,13 +114,16 @@ class EmployeeHours(models.Model):
   class Meta:
     unique_together = ('employee', 'weekday',)
 
-
+@python_2_unicode_compatible
 class Service(models.Model):
   """
   Model to save the distinct services offered by employees
   """
   name = models.CharField(max_length=50)
   duration_in_minutes = models.CharField(max_length=3)
+
+  def __str__(self):
+    return "%s - %s minutos" % (unicode(self.name), self.duration_in_minutes)
 
 
 class Appointment(models.Model):
@@ -133,4 +144,7 @@ class Client(models.Model):
   email = models.EmailField(unique=True)
   name = models.CharField(max_length=50)
   phone_number = models.CharField(max_length=10)
+
+  def __str__(self):
+    return unicode(self.name)
 

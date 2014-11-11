@@ -42,6 +42,10 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
   time = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'])
 
+  services = serializers.SlugRelatedField(many=True, slug_field='name')
+  employee = serializers.SlugRelatedField(slug_field='name')
+  client = serializers.SlugRelatedField(slug_field='name')
+
   class Meta:
     model = Appointment
     fields = ('id', 'day', 'time', 'services', 'employee', 'client')
