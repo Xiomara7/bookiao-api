@@ -125,3 +125,8 @@ if os.getenv('PRODUCTION') == "True":
 
 # Allow all origins to make requests
 CORS_ORIGIN_ALLOW_ALL = True
+
+# JWT config
+JWT_AUTH = {
+  'JWT_VERIFY_EXPIRATION': False,
+}
