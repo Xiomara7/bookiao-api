@@ -5,8 +5,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from core.models import BookiaoUser, Business, Employee, Client, Service, Appointment
-from core.serializers import BookiaoUserSerializer, BusinessSerializer, EmployeeSerializer, ClientSerializer, ServiceSerializer, AppointmentSerializer
+from core.models import BookiaoUser, Business, Employee, Client, Service, Appointment, BetaEmails
+from core.serializers import BookiaoUserSerializer, BusinessSerializer, EmployeeSerializer, ClientSerializer, ServiceSerializer, AppointmentSerializer, BetaEmailsSerializer
 
 @api_view(['POST'])
 def register(request):
@@ -105,3 +105,10 @@ class AppointmentViewSet(viewsets.ModelViewSet):
   filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter,)
   filter_fields = ('employee', 'client', 'day',)
   ordering_fields = ('time', 'day',)
+
+class BetaEmailsViewSet(viewsets.ModelViewSet):
+  """
+  API endpoint for storing emails of people interested in the app
+  """
+  queryset = BetaEmails.objects.all()
+  serializer_class = BetaEmailsSerializer

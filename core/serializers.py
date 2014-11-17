@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from core.models import BookiaoUser, Business, Employee, Client, Service, Appointment
+from core.models import BookiaoUser, Business, Employee, Client, Service, Appointment, BetaEmails
 
 class BookiaoUserSerializer(serializers.ModelSerializer):
   class Meta:
@@ -49,5 +49,9 @@ class AppointmentSerializer(serializers.ModelSerializer):
   class Meta:
     model = Appointment
     fields = ('id', 'day', 'time', 'services', 'employee', 'client')
+
+class BetaEmailsSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = BetaEmails
 
 

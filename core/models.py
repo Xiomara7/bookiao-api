@@ -147,3 +147,11 @@ class Client(models.Model):
   def __str__(self):
     return unicode(self.name)
 
+class BetaEmails(models.Model):
+  """
+  Model to store user emails for Beta
+  """
+  email = models.EmailField(unique=True)
+
+  def __str__(self):
+    return unicode(self.name)
