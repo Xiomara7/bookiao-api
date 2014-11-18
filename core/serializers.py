@@ -1,6 +1,9 @@
+from datetime import datetime, timedelta
+
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
+
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from core.models import BookiaoUser, Business, Employee, Client, Service, Appointment, BetaEmails
@@ -49,6 +52,26 @@ class AppointmentSerializer(serializers.ModelSerializer):
   class Meta:
     model = Appointment
     fields = ('id', 'day', 'time', 'services', 'employee', 'client')
+
+  def validate_time(self, attrs, source):
+    # Check for appointments starting in the past
+    appointments = Appointment.objects.filter(day=attrs['day'], time__lte=attrs['time'])
+    this_datetime = datetime.combine(datetime.today(), attrs[source])
+    for appointment in appointments:
+      appointment_datetime = datetime.combine(datetime.today(), appointment.time)
+      finish_time = appointment_datetime + timedelta(minutes=int(appointment.services.all()[0].duration_in_minutes))
+      if finish_time > this_datetime:
+        raise serializers.ValidationError("Time not available.")
+
+    # Check for appointments starting in the future
+    appointments = Appointment.objects.filter(day=attrs['day'], time__gte=attrs['time'])
+    this_datetime = this_datetime + timedelta(minutes=int(attrs['services'][0].duration_in_minutes))
+    for appointment in appointments:
+      appointment_datetime = datetime.combine(datetime.today(), appointment.time)
+      if this_datetime > appointment_datetime:
+        raise serializers.ValidationError("Time not available.")
+
+    return attrs
 
 class BetaEmailsSerializer(serializers.ModelSerializer):
   class Meta:
