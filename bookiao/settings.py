@@ -104,7 +104,6 @@ class Common(Configuration):
 
     # Twilio settings
     TWILIO_NUMBER = "+17873010162"
-    TWILIO_NUMBER_SID = "PNd681b3066a5346252b74372b62d40c2b"
 
 
 class Development(Common):
@@ -120,6 +119,8 @@ class Development(Common):
     INSTALLED_APPS = Common.INSTALLED_APPS + (
         'debug_toolbar',
     )
+
+    MESSAGES = False
 
 
 class Staging(Common):
@@ -145,6 +146,8 @@ class Staging(Common):
     # Allow all host headers
     ALLOWED_HOSTS = ['*']
 
+    MESSAGES = False
+
 
 class Production(Staging):
     """
@@ -152,4 +155,5 @@ class Production(Staging):
     """
     # Allow all host headers
     ALLOWED_HOSTS = ['*']
-    pass
+    MESSAGES = True
+
