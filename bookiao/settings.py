@@ -77,6 +77,7 @@ class Common(Configuration):
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/1.7/howto/static-files/
+    STATIC_ROOT = 'staticfiles'
     STATIC_URL = '/static/'
 
     AUTH_USER_MODEL = 'core.BookiaoUser'
