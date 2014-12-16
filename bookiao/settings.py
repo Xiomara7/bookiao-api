@@ -7,130 +7,149 @@ https://docs.djangoproject.com/en/1.7/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+from configurations import Configuration, values
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
+class Common(Configuration):
+    # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+    BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'c0s2qo5i@%t^^&rqlrk)v$dcgnmqisi$b6lf3#)o36!km4bj8+'
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = values.SecretValue()
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = values.BooleanValue(False)
 
-TEMPLATE_DEBUG = True
+    TEMPLATE_DEBUG = values.BooleanValue(DEBUG)
 
-ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = []
 
+    # Application definition
+    INSTALLED_APPS = (
+        'django.contrib.admin',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+        'core',
+        'rest_framework',
+        'corsheaders',
+        'django_filters',
+        'django_extensions',
+    )
 
-# Application definition
+    MIDDLEWARE_CLASSES = (
+        'djangosecure.middleware.SecurityMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'corsheaders.middleware.CorsMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    )
 
-INSTALLED_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'core',
-    'rest_framework',
-    'django_extensions',
-    'corsheaders',
-    'django_filters',
-)
+    ROOT_URLCONF = 'bookiao.urls'
 
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+    WSGI_APPLICATION = 'bookiao.wsgi.application'
 
-ROOT_URLCONF = 'bookiao.urls'
+    # Database
+    # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+    DATABASES = values.DatabaseURLValue(
+        'sqlite:///{}'.format(os.path.join(BASE_DIR, 'db.sqlite3'))
+    )
 
-WSGI_APPLICATION = 'bookiao.wsgi.application'
+    # Internationalization
+    # https://docs.djangoproject.com/en/1.7/topics/i18n/
+    LANGUAGE_CODE = 'en-us'
 
+    TIME_ZONE = 'UTC'
 
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+    USE_I18N = True
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    USE_L10N = True
+
+    USE_TZ = True
+
+    # Static files (CSS, JavaScript, Images)
+    # https://docs.djangoproject.com/en/1.7/howto/static-files/
+    STATIC_URL = '/static/'
+
+    AUTH_USER_MODEL = 'core.BookiaoUser'
+
+    REST_FRAMEWORK = {
+      'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAdminUser',
+        # 'rest_framework.permissions.IsAuthenticated',
+      ),
+      'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+      ),
+      'PAGINATE_BY': 10
     }
-}
 
-# Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
+    # Allow all origins to make requests
+    CORS_ORIGIN_ALLOW_ALL = True
 
-LANGUAGE_CODE = 'en-us'
+    # JWT config
+    JWT_AUTH = {
+      'JWT_VERIFY_EXPIRATION': False,
+    }
 
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
+    # Twilio settings
+    TWILIO_NUMBER = "+17873010162"
+    TWILIO_NUMBER_SID = "PNd681b3066a5346252b74372b62d40c2b"
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
+class Development(Common):
+    """
+    The in-development settings and the default configuration.
+    """
+    DEBUG = True
 
-STATIC_URL = '/static/'
+    TEMPLATE_DEBUG = True
 
-AUTH_USER_MODEL = 'core.BookiaoUser'
+    ALLOWED_HOSTS = []
 
-REST_FRAMEWORK = {
-  'DEFAULT_PERMISSION_CLASSES': (
-    # 'rest_framework.permissions.IsAdminUser',
-    # 'rest_framework.permissions.IsAuthenticated',
-  ),
-  'DEFAULT_AUTHENTICATION_CLASSES': (
-    'rest_framework.authentication.SessionAuthentication',
-    'rest_framework.authentication.BasicAuthentication',
-    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-  ),
-  'PAGINATE_BY': 10
-}
+    INSTALLED_APPS = Common.INSTALLED_APPS + (
+        'debug_toolbar',
+    )
 
-if os.getenv('PRODUCTION') == "True":
-  # Parse database configuration from $DATABASE_URL
-  import dj_database_url
-  DATABASES['default'] =  dj_database_url.config()
 
-  # Honor the 'X-Forwarded-Proto' header for request.is_secure()
-  SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+class Staging(Common):
+    """
+    The in-staging settings.
+    """
+    INSTALLED_APPS = Common.INSTALLED_APPS + (
+        'djangosecure',
+    )
 
-  # Allow all host headers
-  ALLOWED_HOSTS = ['*']
+    # django-secure
+    SESSION_COOKIE_SECURE = values.BooleanValue(True)
+    SECURE_SSL_REDIRECT = values.BooleanValue(True)
+    SECURE_HSTS_SECONDS = values.IntegerValue(31536000)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = values.BooleanValue(True)
+    SECURE_FRAME_DENY = values.BooleanValue(True)
+    SECURE_CONTENT_TYPE_NOSNIFF = values.BooleanValue(True)
+    SECURE_BROWSER_XSS_FILTER = values.BooleanValue(True)
+    SECURE_PROXY_SSL_HEADER = values.TupleValue(
+        ('HTTP_X_FORWARDED_PROTO', 'https')
+    )
 
-  # Static asset configuration
-  BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-  STATIC_ROOT = 'staticfiles'
-  STATIC_URL = '/static/'
+    # Allow all host headers
+    ALLOWED_HOSTS = ['*']
 
-  STATICFILES_DIRS = (
-      os.path.join(BASE_DIR, 'static'),
-  )
 
-# Allow all origins to make requests
-CORS_ORIGIN_ALLOW_ALL = True
-
-# JWT config
-JWT_AUTH = {
-  'JWT_VERIFY_EXPIRATION': False,
-}
-
-# Twilio settings
-TWILIO_NUMBER = "+17873010162"
-TWILIO_NUMBER_SID = "PNd681b3066a5346252b74372b62d40c2b"
+class Production(Staging):
+    """
+    The in-production settings.
+    """
+    # Allow all host headers
+    ALLOWED_HOSTS = ['*']
+    pass

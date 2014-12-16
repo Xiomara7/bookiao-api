@@ -1,1 +1,1 @@
-web: gunicorn bookiao.wsgi --log-file -
+web: newrelic-admin run-program gunicorn -b "0.0.0.0:$PORT" -w 3 {{ project_name }}.wsgi
