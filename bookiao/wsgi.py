@@ -27,5 +27,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bookiao.settings')
 os.environ.setdefault('DJANGO_CONFIGURATION', settings.title())
 
 from configurations.wsgi import get_wsgi_application
+from whitenoise.django import DjangoWhiteNoise
 
 application = get_wsgi_application()
+application = DjangoWhiteNoise(application)
