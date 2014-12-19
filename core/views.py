@@ -1,3 +1,5 @@
+from datetime import datetime, time, timedelta
+
 from django.contrib.auth import get_user_model
 
 from rest_framework import viewsets, status, serializers, filters
@@ -53,6 +55,56 @@ def user_type(request):
 
   response['userType'] = userType
   return Response(response, status=status.HTTP_200_OK)
+
+def validate_times(times, day, employee, service):
+  removable_times = []
+  for time in times:
+    # Check for appointments starting in the past
+    appointments = Appointment.objects.filter(day=day, time__lte=time.time(), employee=employee)
+    for appointment in appointments:
+      appointment_datetime = datetime.combine(time.date(), appointment.time)
+      finish_time = appointment_datetime + timedelta(minutes=int(appointment.services.all()[0].duration_in_minutes))
+      if finish_time > time:
+        removable_times.append(time)
+
+    # Check for appointments starting in the future
+    appointments = Appointment.objects.filter(day=day, time__gte=time.time(), employee=employee)
+    this_datetime = time + timedelta(minutes=int(service.duration_in_minutes))
+    for appointment in appointments:
+      appointment_datetime = datetime.combine(time.date(), appointment.time)
+      if this_datetime > appointment_datetime:
+        removable_times.append(time)
+
+  return [time for time in times if time not in removable_times]
+
+@api_view(['GET'])
+def available_times(request):
+  # Get query parameters
+  employee = Employee.objects.get(id=request.QUERY_PARAMS['employee'])
+  service = Service.objects.get(id=request.QUERY_PARAMS['service'])
+  day = request.QUERY_PARAMS['day']
+
+  # Start with 9am time
+  current_time = datetime.strptime(day + ' 9:00 AM', '%Y-%m-%d %I:%M %p')
+  final_time = current_time + timedelta(hours=12)
+
+  # Generate all possible time slots
+  available_times = [current_time]
+  while current_time < final_time:
+    current_time = current_time + timedelta(minutes=int(service.duration_in_minutes))
+    available_times.append(current_time)
+
+  # Prune list of possible time slots using current appointments
+  available_times = validate_times(available_times, day, employee, service)
+
+  # Return the pruned list
+  response = {
+    'available_times': [d.time().strftime('%I:%M %p') for d in available_times]
+  }
+
+  return Response(response, status=status.HTTP_200_OK)
+
+
 
 class BusinessViewSet(viewsets.ModelViewSet):
   """
