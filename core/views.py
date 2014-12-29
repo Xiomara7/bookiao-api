@@ -80,8 +80,8 @@ def validate_times(times, day, employee, service):
 @api_view(['GET'])
 def available_times(request):
   # Get query parameters
-  employee = Employee.objects.get(id=request.QUERY_PARAMS['employee'])
-  service = Service.objects.get(id=request.QUERY_PARAMS['service'])
+  employee = Employee.objects.get(name=request.QUERY_PARAMS['employee'])
+  service = Service.objects.get(name=request.QUERY_PARAMS['service'])
   day = request.QUERY_PARAMS['day']
 
   # Start with 9am time
